@@ -1,6 +1,8 @@
 /node_modules
-bundle.js
+/dist/bundle.js
+/db/config.js
 npm-debug.log
+
 
 # IntelliJ
 *.iml

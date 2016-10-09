@@ -1,9 +1,10 @@
 var mysql = require('mysql');
+var config = require('./config.js');
 var pool  = mysql.createPool({
   connectionLimit : 10,
   host            : 'localhost',
-  user            : 'root',
-  password        : 'root',
+  user            : config.dbUser,
+  password        : config.dbPass,
   database        : 'makeup'
 });
 
