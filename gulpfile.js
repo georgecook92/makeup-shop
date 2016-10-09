@@ -43,11 +43,14 @@ gulp.task('buildAPI', function() {
     console.log('API ERROR', err);
     this.emit('end');
   }))
+  .pipe(sourcemaps.init())
   .pipe(babel({
     presets: ['es2015']
   }))
   .pipe(uglify())
+  .pipe(sourcemaps.write())
   .pipe(gulp.dest('./dist/API'))
+  .pipe(livereload())
 });
 
 
