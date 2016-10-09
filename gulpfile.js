@@ -19,8 +19,6 @@ gulp.task('browserify', function() {
  });
  b.transform("babelify", {presets: ["es2015", "react"]}) // use the babelify transform
 
-
-
  return b.bundle()
  .pipe(source('bundle.js'))
  .pipe(buffer())
@@ -42,7 +40,7 @@ gulp.task('browserify', function() {
 gulp.task('buildAPI', function() {
   return gulp.src('api/**/*.js')
   .pipe(plumber(function(err){
-    console.log('browserfy error', err);
+    console.log('API ERROR', err);
     this.emit('end');
   }))
   .pipe(babel({
@@ -53,9 +51,10 @@ gulp.task('buildAPI', function() {
 });
 
 
-gulp.task('watch', function() {
+// gulp.task('watch', function() {
+//
+//  gulp.watch("src/*.js", ['browserify']);
+//  gulp.watch("src/*.jsx", ['browserify']);
+// });
 
- gulp.watch("src/*.js", ['browserify']);
- gulp.watch("src/*.jsx", ['browserify']);
-});
-gulp.task('default', ['watch','browserify']);
+gulp.task('default', ['buildAPI','browserify']);

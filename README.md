@@ -1,25 +1,7 @@
-# ReduxSimpleStarter
+Makeup Store.
 
-Interested in learning [Redux](https://www.udemy.com/react-redux/)?
+Production code is inside the dist folder. Bundle is react code. API is for the backend API.
 
-###Getting Started###
+Run 'gulp' for build of front/backend
 
-There are two methods for getting started with this repo.
-
-####Familiar with Git?#####
-Checkout this repo, install dependencies, then start the gulp process with the following:
-
-```
-	> git clone git@github.com:StephenGrider/ReduxSimpleStarter.git
-	> cd ReduxSimpleStarter
-	> npm install
-	> npm start
-```
-
-####Not Familiar with Git?#####
-Click [here](https://github.com/StephenGrider/ReactStarter/releases) then download the .zip file.  Extract the contents of the zip file, then open your terminal, change to the project directory, and:
-
-```
-	> npm install
-	> npm start
-```
+node server.js will run the server on localhost:8080. 
