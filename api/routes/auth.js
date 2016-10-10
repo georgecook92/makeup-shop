@@ -42,7 +42,26 @@ router.post('/register', createAccountLimiter, (req,res,next) => {
 router.post('/confirmUser', createAccountLimiter, (req,res,next) => {
   let updateConfirmUserSQL = 'update _users set `verified` = 1, `token` = NULL where `token` = ?' ;
   var Model = new AuthModel(updateConfirmUserSQL, req.body, res);
-  Model.confirmUser();
+  Model.confirmUser().then( (result) => {
+    console.log('result.success from promise',result.success);
+    if (result) {
+      res.status(200).json({
+        "success": true
+      });
+    }
+  } ).catch( (err) => {
+    console.log('error',err.error);
+    if (err.error === 'not-exist') {
+      console.log('NOT EXIST');
+      res.status(404).json({
+        "error": err.error
+      });
+    } else {
+      res.status(500).json({
+        "error": err.error
+      });
+    }
+  } )
 });
 
 router.post('/changePassword', (req,res,next) => {

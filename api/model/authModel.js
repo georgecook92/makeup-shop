@@ -12,23 +12,29 @@ export default class AuthModel {
   }
 
   confirmUser() {
+    return new Promise( (resolve,reject) => {
+      pool.getConnection( (err, connection) => {
+        connection.query(this.sql, [this.data.token], (err,result) => {
+          if (err) {
+            console.log(err);
+            reject({
+              error: err
+            });
+            connection.release();
+          }
+          if (result.affectedRows > 0) {
+            resolve({
+              success: true
+            });
 
-    pool.getConnection( (err, connection) => {
-      connection.query(this.sql, [this.data.token], (err,result) => {
-        if (err) {
-          console.log(err);
-          connection.release();
-        }
-        if (result.affectedRows > 0) {
-          this.res.status(200).json({
-            "success": true
-          });
-        } else {
-          this.res.status(404).json({
-            "success": false
-          });
-        }
-      } )
+          } else {
+            reject({
+              error: 'not-exist'
+            });
+
+          }
+        } )
+      } );
     } );
   }
 
