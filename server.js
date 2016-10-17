@@ -23,6 +23,19 @@ app.set('trust proxy', 1);
 
 app.use('/auth',auth);
 
+app.use(function(err, req, res, next){
+  if (err.message === 'Incorrect Password') {
+    res.status(401);
+  } else if(err.message === 'Not Exist') {
+    res.status(404);
+  } else if(err.message === 'Exists' || err.message === 'Provide All Fields'){
+    res.status(422);
+  } else {
+    res.status(500);
+  }
+  res.end(err.message + '\n');
+});
+
 app.get('*', (req,res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 });
