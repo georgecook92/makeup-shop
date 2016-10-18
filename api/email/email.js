@@ -40,7 +40,7 @@ export default class Email {
       if (err) {
         return console.log('err', err);
       }
-      console.log('res inside', this.res);
+    //  console.log('res inside', this.res);
       this.res.json( { 'success': 'Email has been sent' } );
 
     });

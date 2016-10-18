@@ -1,6 +1,7 @@
 var bcrypt = require('bcrypt');
 var pool = require('../../../db/connect.js');
 const saltRounds = 10;
+const randomstring = require('randomstring');
 import Email from '../email/email.js';
 
 export default class AuthModel {
@@ -12,11 +13,48 @@ export default class AuthModel {
     this.next = next;
   }
 
+  changePassword() {
+    pool.getConnection().then(connection => {
+      try {
+        bcrypt.genSalt(saltRounds, (err, salt) => {
+          if (err) {
+            throw new Error(err);
+          }
+          bcrypt.hash(this.data.password, salt, (err, hash) => {
+            if (err) {
+              throw new Error(err);
+            }
+            this.data.password = hash;
+            return connection.query(this.sql, [this.data.password, this.data.user_id]).then(result => {
+              console.log(result);
+              if (result.changedRows > 0) {
+                connection.connection.release();
+                this.res.status(200).json({
+                  success: true
+                });
+              } else {
+                connection.connection.release();
+                throw new Error('User Does Not Exist');
+              }
+            });
+          });
+        });
+      } catch (e) {
+        console.log(e);
+        this.next(e);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      this.next(err);
+    });
+  }
+
   confirmUser() {
     pool.getConnection().then(connection => {
       return connection.query(this.sql, [this.data.token]).then(result => {
         console.log('result', result);
-        if (result.affectedRows > 0) {
+        if (result.changedRows > 0) {
           //  how the mysql library is wrapped - stackoverflow
           connection.connection.release();
           this.res.status(200).json({
@@ -25,7 +63,7 @@ export default class AuthModel {
         } else {
           //  how the mysql library is wrapped - stackoverflow
           connection.connection.release();
-          throw new Error('Not Exist');
+          throw new Error('User Does Not Exist');
         }
       });
     }).catch(err => {
@@ -37,6 +75,11 @@ export default class AuthModel {
   register() {
     var {email, password, first_name, last_name, phone} = this.data;
     var user = {email, password, first_name, last_name, phone};
+    var registerToken = randomstring.generate({
+      length: 20,
+      charset: 'hex'
+    });
+    user.token = registerToken;
     try {
       if (!email || !password || !first_name || !last_name || !phone) {
         // to do with the node-mysql library
@@ -57,13 +100,13 @@ export default class AuthModel {
                     if (err) {
                       throw new Error(err);
                     }
-                    this.data.password = hash;
+                    user.password = hash;
                     return pool.getConnection().then(conn => {
                       return conn.query('INSERT INTO _users SET ?', user).then(result => {
                         var url = 'www.testsite.com';
                         var registerEmailContent = 'You are receiving this because you (or someone else) have signed up ' +
                         'to the website.\n\n Please click on the following link, or paste this into your browser to complete' +
-                         'the process:\n\n' + url + '/confirmEmail/token \n\n Once you have confirmed your account,' +
+                         'the process:\n\n' + url + '/confirmEmail/' + user.token + '\n\n Once you have confirmed your account,' +
                          ' you will be able to login.\n';
                         var email = new Email(this.data.email, 'userconfirmation@makeup.com', 'Confirm Account', registerEmailContent, this.res);
                         email.sendTokenEmail();
@@ -107,6 +150,7 @@ export default class AuthModel {
                 connection.connection.release();
                 console.log(result[0]);
                 this.res.status(200).json({
+                  user_id: result[0].user_id,
                   email: result[0].email,
                   first_name: result[0].first_name,
                   last_name: result[0].last_name,

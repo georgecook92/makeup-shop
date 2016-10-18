@@ -54,10 +54,9 @@ gulp.task('buildAPI', function() {
 });
 
 
-// gulp.task('watch', function() {
-//
-//  gulp.watch("src/*.js", ['browserify']);
-//  gulp.watch("src/*.jsx", ['browserify']);
-// });
+gulp.task('watch', function() {
+ gulp.watch("src/**/*.js", ['browserify']);
+ gulp.watch("api/**/*.js", ['buildAPI']);
+});
 
 gulp.task('default', ['buildAPI','browserify']);

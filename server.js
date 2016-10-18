@@ -26,7 +26,7 @@ app.use('/auth',auth);
 app.use(function(err, req, res, next){
   if (err.message === 'Incorrect Password') {
     res.status(401);
-  } else if(err.message === 'Not Exist') {
+  } else if(err.message === 'User Does Not Exist') {
     res.status(404);
   } else if(err.message === 'Exists' || err.message === 'Provide All Fields'){
     res.status(422);

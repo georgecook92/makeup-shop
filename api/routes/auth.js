@@ -39,7 +39,9 @@ router.post('/confirmUser', createAccountLimiter, (req, res, next) => {
 });
 
 router.post('/changePassword', (req, res, next) => {
-
+  var changePasswordSQL = 'update _users set `password` = ? where `user_id` = ?';
+  var Model = new AuthModel(changePasswordSQL, req.body, res, next);
+  Model.changePassword();
 });
 
 module.exports = router;
