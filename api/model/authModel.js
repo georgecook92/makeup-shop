@@ -6,11 +6,43 @@ import Email from '../email/email.js';
 
 export default class AuthModel {
 
-  constructor(sql, data, res, next) {
+  constructor(data, res, next, sql = '') {
     this.sql = sql;
     this.data = data;
     this.res = res;
     this.next = next;
+  }
+
+  forgotPasswordSetup() {
+    pool.getConnection().then(connection => {
+      var token = randomstring.generate({
+        length: 20,
+        charset: 'hex'
+      });
+      return connection.query(this.sql, [token, this.data.email]).then(result => {
+        if (result.changedRows > 0) {
+          connection.connection.release();
+          var url = 'www.testsite.com';
+          var emailContent = 'You are receiving this because you have requested to reset your password. ' +
+          'Please click on the following link, or paste this into your browser to complete' +
+           'the process:\n\n' + url + '/resetForgottenPassword/' + token + '\n\n After confirming your password' +
+           ' you will be able to login.\n';
+          var email = new Email(this.data.email, 'forgotten-password@makeup.com', 'Forgotten Password', emailContent, this.res);
+          email.sendTokenEmail(); // this sends a response also
+        } else {
+          connection.connection.release();
+          throw new Error('User Does Not Exist');
+        }
+      })
+      .catch(err => {
+        if (err) {
+          console.log(err);
+          this.next(err);
+        }
+      })
+    });
+
+
   }
 
   changePassword() {
@@ -89,15 +121,18 @@ export default class AuthModel {
         pool.getConnection().then(connection => {
           return connection.query(this.sql, [this.data.email]).then(result => {
             if (result.length > 0) {
+              connection.connection.release();
               throw new Error('Exists');
             } else {
               try {
                 bcrypt.genSalt(saltRounds, (err, salt) => {
                   if (err) {
+                    connection.connection.release();
                     throw new Error(err);
                   }
                   bcrypt.hash(this.data.password, salt, (err, hash) => {
                     if (err) {
+                      connection.connection.release();
                       throw new Error(err);
                     }
                     user.password = hash;

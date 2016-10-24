@@ -5,3 +5,7 @@ Production code is inside the dist folder. Bundle is react code. API is for the 
 Run 'gulp' for build of front/backend
 
 node server.js will run the server on localhost:8080.
+
+
+TODO:
+POSTS controller and model

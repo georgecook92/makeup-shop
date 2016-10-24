@@ -11,18 +11,18 @@ var babel = require('gulp-babel');
 
 var buffer = require('vinyl-buffer');
 
-//REACT STUFF
+// REACT STUFF
 gulp.task('browserify', function() {
- var b = browserify({
- entries: ['src/app.js'], //entry file
- debug: true
- });
- b.transform("babelify", {presets: ["es2015", "react"]}) // use the babelify transform
+  var b = browserify({
+    entries: ['src/app.js'], // entry file
+    debug: true
+  });
+  b.transform("babelify", {presets: ["es2015", "react"]}); // use the babelify transform
 
- return b.bundle()
+  return b.bundle()
  .pipe(source('bundle.js'))
  .pipe(buffer())
- .pipe(plumber(function(err){
+ .pipe(plumber(function(err) {
    console.log('browserfy error', err);
    this.emit('end');
  }))
@@ -34,12 +34,11 @@ gulp.task('browserify', function() {
  .pipe(livereload())
 });
 
-
-//API STUFF
+// API STUFF
 
 gulp.task('buildAPI', function() {
   return gulp.src('api/**/*.js')
-  .pipe(plumber(function(err){
+  .pipe(plumber(function(err) {
     console.log('API ERROR', err);
     this.emit('end');
   }))
@@ -53,10 +52,9 @@ gulp.task('buildAPI', function() {
   .pipe(livereload())
 });
 
-
 gulp.task('watch', function() {
- gulp.watch("src/**/*.js", ['browserify']);
- gulp.watch("api/**/*.js", ['buildAPI']);
+  gulp.watch("src/**/*.js", ['browserify']);
+  gulp.watch("api/**/*.js", ['buildAPI']);
 });
 
-gulp.task('default', ['buildAPI','browserify']);
+gulp.task('default', ['buildAPI', 'browserify']);
