@@ -5,6 +5,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const app = express();
+require('babel-polyfill');
 
 const auth = require('./dist/API/routes/auth');
 const products = require('./dist/API/routes/products');
