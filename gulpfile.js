@@ -17,7 +17,7 @@ gulp.task('browserify', function() {
     entries: ['src/app.js'], // entry file
     debug: true
   });
-  b.transform("babelify", {presets: ["es2015", "react"]}); // use the babelify transform
+  b.transform("babelify", {presets: ["es2017","es2015", "react"]}); // use the babelify transform
 
   return b.bundle()
  .pipe(source('bundle.js'))
