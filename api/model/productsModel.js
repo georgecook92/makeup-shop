@@ -52,36 +52,12 @@ export default class ProductsModel {
   }
   // ADMIN PANEL STUFF
 
-  // DO I NEED TO RETURN ANY DATA BELOW OR WILL THAT HAPPEN VIA FRONT END?????????
-
   changeProductQuantity() {
     Queries.standardUpdateQuery(this.sql, [this.data.quantity, this.data.productId], this.next, this.res);
   }
 
   changeDiscount() {
-    pool.getConnection().then(connection => {
-      connection.query(this.sql, [this.data.quantity, this.data.productId]).then(result => {
-        try {
-          if (result.affectedRows > 0) {
-            if (result.changedRows > 0) {
-              connection.connection.release();
-              this.res.json({success: true});
-            } else { // no changed quantity
-              throw new Error('Same Quantity');
-            }
-          } else { // wrong id!
-            throw new Error('ID Not Found');
-          }
-        } catch (e) {
-          console.log(e);
-          this.next(e);
-        }
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      this.next(err);
-    });
+    Queries.standardUpdateQuery(this.sql, [this.data.discount, this.data.productId], this.next, this.res);
   }
 
 }

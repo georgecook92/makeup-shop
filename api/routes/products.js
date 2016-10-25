@@ -20,4 +20,10 @@ router.put('/changeQuantity', (req, res, next) => {
   Model.changeProductQuantity();
 });
 
+router.put('/changeDiscount', (req, res, next) => {
+  var changeDiscountSQL = 'update _product set `discount` = ? where `product_id` = ?';
+  var Model = new ProductsModel(req.body, res, next, changeDiscountSQL);
+  Model.changeDiscount();
+})
+
 module.exports = router;

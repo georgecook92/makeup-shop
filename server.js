@@ -19,8 +19,8 @@ app.use(cookieParser());
 app.set('trust proxy', 1);
 
 // API ROUTES
-app.use('/auth', auth);
-app.use('/products', products);
+app.use('/api/auth', auth);
+app.use('/api/products', products);
 
 app.use(function(err, req, res, next) {
   if (err.message === 'Incorrect Password') {
