@@ -37,7 +37,7 @@ gulp.task('browserify', function() {
 // API STUFF
 
 gulp.task('buildAPI', function() {
-  return gulp.src('api/**/*.js')
+  return gulp.src('api/**/**/*.js')
   .pipe(plumber(function(err) {
     console.log('API ERROR', err);
     this.emit('end');
@@ -55,6 +55,7 @@ gulp.task('buildAPI', function() {
 gulp.task('watch', function() {
   gulp.watch("src/**/*.js", ['browserify']);
   gulp.watch("api/**/*.js", ['buildAPI']);
+  gulp.watch("api/db/**/.js", ['buildAPI']);
 });
 
 gulp.task('default', ['buildAPI', 'browserify']);

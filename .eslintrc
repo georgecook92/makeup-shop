@@ -2,6 +2,7 @@
   "extends": "eslint-config-google",
   "rules": {
     "max-len": [2, 150, 4, {"ignoreUrls": true}],
-    "camelcase": "off"
+    "camelcase": "off",
+    "require-jsdoc": "off"
     }
 }

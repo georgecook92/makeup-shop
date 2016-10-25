@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 const auth = require('./dist/API/routes/auth');
+const products = require('./dist/API/routes/products');
 
 app.use(express.static(__dirname));
 
@@ -19,13 +20,14 @@ app.set('trust proxy', 1);
 
 // API ROUTES
 app.use('/auth', auth);
+app.use('/products', products);
 
 app.use(function(err, req, res, next) {
   if (err.message === 'Incorrect Password') {
     res.status(401);
-  } else if (err.message === 'User Does Not Exist') {
+  } else if (err.message === 'User Does Not Exist' || err.message === 'ID Not Found') {
     res.status(404);
-  } else if (err.message === 'Exists' || err.message === 'Provide All Fields') {
+  } else if (err.message === 'Exists' || err.message === 'Provide All Fields' || err.message === 'No Change') {
     res.status(422);
   } else {
     res.status(500);

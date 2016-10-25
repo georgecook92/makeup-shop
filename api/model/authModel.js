@@ -1,16 +1,17 @@
 var bcrypt = require('bcrypt');
-var pool = require('../../../db/connect.js');
+var pool = require('../db/connect.js');
 const saltRounds = 10;
 const randomstring = require('randomstring');
 import Email from '../email/email.js';
 
 export default class AuthModel {
 
-  constructor(data, res, next, sql = '') {
+  constructor(data, res, next, sql = '', secondSQL = '') {
     this.sql = sql;
     this.data = data;
     this.res = res;
     this.next = next;
+    this.secondSQL = secondSQL;
   }
 
   forgotPasswordSetup() {
@@ -39,13 +40,54 @@ export default class AuthModel {
           console.log(err);
           this.next(err);
         }
-      })
+      });
     });
-
-
   }
 
-  changePassword() {
+  // hashPassword(password) {
+  //   return new Promise((resolve, reject) =>  {
+  //     bcrypt.genSalt(saltRounds, (err, salt) => {
+  //       if (err) {
+  //         reject(err);
+  //       }
+  //       bcrypt.hash(password, salt, (err, hash) => {
+  //         if (err) {
+  //           reject(err);
+  //         }
+  //         resolve(hash);
+  //       });
+  //     });
+  //   })
+  // }
+  //
+  // updatePassword(connection, password, identifier) {
+  //   return connection.query(this.sql, [password, identifier])
+  // }
+  // removeToken(connection, identifier) {
+  //   return connection.query(this.secondSQL, [identifier]);
+  // }
+  // changePasswordNew(identifier) {
+  //   var getConnection = pool.getConnection();
+  //   var hashPassword = getConnection.then(connection => {
+  //     return this.hashPassword(this.data.password);
+  //   });
+  //   var updatePassword = Promise.all([getConnection, hashPassword]).spread((connection, password) => {
+  //     return this.updatePassword(connection, password, identifier);
+  //   });
+  //   var removeToken = Promise.all([getConnection, hashPassword, updatePassword]).spread((connection, password, result) => {
+  //     if (result.changedRows > 0) { // if the identifier was the token - do another query which removes the token
+  //       if (typeof identifier === 'string') {
+  //         return this.removeToken(connection, identifier);
+  //       }
+  //     }
+  //   });
+  //   removeToken.then(() => {
+  //     return Promise.all([getConnection]).spread(connection => {
+  //     });
+  //   });
+  // }
+
+  changePassword(identifier) {
     pool.getConnection().then(connection => {
       try {
         bcrypt.genSalt(saltRounds, (err, salt) => {
@@ -57,9 +99,26 @@ export default class AuthModel {
               throw new Error(err);
             }
             this.data.password = hash;
-            return connection.query(this.sql, [this.data.password, this.data.user_id]).then(result => {
+            return connection.query(this.sql, [this.data.password, identifier]).then(result => {
               console.log(result);
               if (result.changedRows > 0) {
+                // if the identifier was the token - do another query which removes the token
+                if (typeof identifier === 'string') {
+                  connection.query(this.secondSQL, [identifier]).then(result => {
+                    if (result.changedRows > 0) {
+                      connection.connection.release();
+                      this.res.status(200).json({
+                        success: true
+                      });
+                    } else {
+                      connection.connection.release();
+                      throw new Error('User Does Not Exist');
+                    }
+                  }).catch(error => {
+                    connection.connection.release();
+                    throw new Error('User Does Not Exist');
+                  });
+                }
                 connection.connection.release();
                 this.res.status(200).json({
                   success: true
@@ -68,6 +127,9 @@ export default class AuthModel {
                 connection.connection.release();
                 throw new Error('User Does Not Exist');
               }
+            }).catch(error => {
+              console.log(error);
+              this.next(error);
             });
           });
         });

@@ -7,5 +7,9 @@ Run 'gulp' for build of front/backend
 node server.js will run the server on localhost:8080.
 
 
-TODO:
-POSTS controller and model
+API TODO:
+
+// Partially waiting on info for products
+Products controller and model - getting products from db by category and individual products.
+
+Cart controller and model - adding/removing product from cart (check if it exists in cart already). Checkout cart. Change quantity in cart.
