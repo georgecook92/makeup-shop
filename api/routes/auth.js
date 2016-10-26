@@ -16,7 +16,8 @@ router.post('/login', createAccountLimiter, (req, res, next) => {
 
 router.post('/register', (req, res, next) => {
   var emailCheckSQL = 'select * from `_users` where `email` = ?';
-  var Model = new AuthModel(req.body, res, next, emailCheckSQL);
+  var insertSQL = 'INSERT INTO _users SET ?';
+  var Model = new AuthModel(req.body, res, next, emailCheckSQL, insertSQL);
   Model.register();
 });
 

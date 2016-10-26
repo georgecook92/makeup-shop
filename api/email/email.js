@@ -12,28 +12,35 @@ export default class Email {
   }
 
   sendTokenEmail() {
-    var options = {
-      // need ENV
-      auth: {
-        api_user: 'Georgecook92',
-        api_key: 'osc5Gne^s9tAd25n'
-      }
-    };
-    var mailer = nodemailer.createTransport(sgTransport(options));
-    var mailOptions = {
-      to: this.recipient,
-      from: this.sender,
-      subject: this.subject,
-      text: this.text
-    };
+    return new Promise((resolve, reject) => {
+      var options = {
+        // need ENV
+        auth: {
+          api_user: 'Georgecook92',
+          api_key: 'osc5Gne^s9tAd25n'
+        }
+      };
+      var mailer = nodemailer.createTransport(sgTransport(options));
+      var mailOptions = {
+        to: this.recipient,
+        from: this.sender,
+        subject: this.subject,
+        text: this.text
+      };
 
-    // uses node mailer and send-grid
-    mailer.sendMail(mailOptions, err => {
-      if (err) {
-        return console.log('err', err);
-      }
-    //  console.log('res inside', this.res);
-      this.res.json({success: 'Email has been sent'});
+      // uses node mailer and send-grid
+      mailer.sendMail(mailOptions, err => {
+        if (err) {
+          console.log('err', err);
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
     });
+
+
+
+
   }
 }
