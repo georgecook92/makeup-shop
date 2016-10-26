@@ -144,26 +144,45 @@ export default class AuthModel {
     });
   }
 
-  confirmUser() {
-    pool.getConnection().then(connection => {
-      return connection.query(this.sql, [this.data.token]).then(result => {
-        console.log('result', result);
-        if (result.changedRows > 0) {
-          //  how the mysql library is wrapped - stackoverflow
-          connection.connection.release();
-          this.res.status(200).json({
-            success: true
-          });
-        } else {
-          //  how the mysql library is wrapped - stackoverflow
-          connection.connection.release();
-          throw new Error('User Does Not Exist');
-        }
-      });
-    }).catch(err => {
-      console.log(err);
-      this.next(err);
-    });
+  async confirmUser() {
+    try {
+      var connection = await pool.getConnection();
+      var result = await connection.query(this.sql, [this.data.token]);
+      console.log(result.changedRows);
+      if (result.changedRows > 0) {
+        //  how the mysql library is wrapped - stackoverflow
+        connection.connection.release();
+        this.res.status(200).json({
+          success: true
+        });
+      } else {
+        //  how the mysql library is wrapped - stackoverflow
+        connection.connection.release();
+        throw new Error('User Does Not Exist');
+      }
+    } catch (e) {
+      console.log(e);
+      this.next(e);
+    }
+    // pool.getConnection().then(connection => {
+    //   return connection.query(this.sql, [this.data.token]).then(result => {
+    //     console.log('result', result);
+    //     if (result.changedRows > 0) {
+    //       //  how the mysql library is wrapped - stackoverflow
+    //       connection.connection.release();
+    //       this.res.status(200).json({
+    //         success: true
+    //       });
+    //     } else {
+    //       //  how the mysql library is wrapped - stackoverflow
+    //       connection.connection.release();
+    //       throw new Error('User Does Not Exist');
+    //     }
+    //   });
+    // }).catch(err => {
+    //   console.log(err);
+    //   this.next(err);
+    // });
   }
 
   register() {
