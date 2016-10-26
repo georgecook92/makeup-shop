@@ -24,6 +24,12 @@ router.put('/changeDiscount', (req, res, next) => {
   var changeDiscountSQL = 'update _product set `discount` = ? where `product_id` = ?';
   var Model = new ProductsModel(req.body, res, next, changeDiscountSQL);
   Model.changeDiscount();
-})
+});
+
+router.put('/changePrice', (req, res, next) => {
+  var changePriceSQL = 'update _product set `price` = ? where `product_id` = ?';
+  var Model = new ProductsModel(req.body, res, next, changePriceSQL);
+  Model.changePrice();
+});
 
 module.exports = router;

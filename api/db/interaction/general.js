@@ -1,27 +1,36 @@
 var pool = require('../connect.js');
 
-export function standardUpdateQuery(SQL, data, next, res) {
-  pool.getConnection().then(connection => {
-    connection.query(SQL, data).then(result => {
-      try {
-        if (result.affectedRows > 0) {
-          if (result.changedRows > 0) {
-            connection.connection.release();
-            res.json({success: true});
-          } else { // no changed quantity etc
-            throw new Error('No Change');
-          }
-        } else { // wrong id!
-          throw new Error('ID Not Found');
-        }
-      } catch (e) {
-        console.log(e);
-        next(e);
+export async function standardUpdateQuery(SQL, data, next, res) {
+  try {
+    const connection = await pool.getConnection();
+    const result = await connection.query(SQL, data);
+    if (result.affectedRows > 0) { // exists
+      if (result.changedRows > 0) { // changed quantity
+        connection.connection.release();
+        res.json({success: true});
+      } else { // exists but no change
+        throw new Error('No Change')
       }
-    });
-  })
-  .catch(err => {
-    console.log(err);
-    next(err);
-  });
+    } else { // does not exist
+      throw new Error('ID Not Found');
+    }
+  } catch (e) {
+    console.log(e);
+    next(e);
+  }
+}
+
+export async function standardGetQuery(SQL, data, next, res) {
+  try {
+    const connection = await pool.getConnection();
+    const result = await connection.query(SQL, data);
+    if (result.length > 0) {
+      res.json(result);
+    } else {
+      throw new Error('ID Not Found');
+    }
+  } catch (e) {
+    console.log(e);
+    next(e);
+  }
 }
