@@ -30,7 +30,7 @@ export default class AuthModel {
     })
   }
 
-  comparePassword(password,dbPassword) {
+  comparePassword(password, dbPassword) {
     return new Promise((resolve, reject) => {
       bcrypt.compare(password, dbPassword, (err, comparisonValue) => {
         if (err) {
@@ -66,8 +66,8 @@ export default class AuthModel {
         throw new Error('User Does Not Exist');
       }
     } catch (e) {
-      console.log(err);
-      this.next(err);
+      console.log(e);
+      this.next(e);
     }
   }
 
@@ -152,8 +152,8 @@ export default class AuthModel {
         'to the website.\n\n Please click on the following link, or paste this into your browser to complete' +
          'the process:\n\n' + url + '/confirmEmail/' + user.token + '\n\n Once you have confirmed your account,' +
          ' you will be able to login.\n';
-        var email = new Email(this.data.email, 'userconfirmation@makeup.com', 'Confirm Account', registerEmailContent, this.res);
-        const emailResponse = await email.sendTokenEmail();
+        var Email = new Email(this.data.email, 'userconfirmation@makeup.com', 'Confirm Account', registerEmailContent, this.res);
+        const emailResponse = await Email.sendTokenEmail();
         if (emailResponse) {
           this.res.json({success: 'Email has been sent'});
         }
@@ -163,72 +163,7 @@ export default class AuthModel {
       console.log(e);
       this.next(e);
     }
-
   }
-
-  // register() {
-  //   var {email, password, first_name, last_name, phone} = this.data;
-  //   var user = {email, password, first_name, last_name, phone};
-  //   var registerToken = randomstring.generate({
-  //     length: 20,
-  //     charset: 'hex'
-  //   });
-  //   user.token = registerToken;
-  //   try {
-  //     if (!email || !password || !first_name || !last_name || !phone) {
-  //       // to do with the node-mysql library
-  //       console.log('error - not all fields');
-  //       throw new Error('Provide All Fields');
-  //     } else {
-  //       pool.getConnection().then(connection => {
-  //         return connection.query(this.sql, [this.data.email]).then(result => {
-  //           if (result.length > 0) {
-  //             connection.connection.release();
-  //             throw new Error('Exists');
-  //           } else {
-  //             try {
-  //               bcrypt.genSalt(saltRounds, (err, salt) => {
-  //                 if (err) {
-  //                   connection.connection.release();
-  //                   throw new Error(err);
-  //                 }
-  //                 bcrypt.hash(this.data.password, salt, (err, hash) => {
-  //                   if (err) {
-  //                     connection.connection.release();
-  //                     throw new Error(err);
-  //                   }
-  //                   user.password = hash;
-  //                   return pool.getConnection().then(conn => {
-  //                     return conn.query('INSERT INTO _users SET ?', user).then(result => {
-  //                       var url = 'www.testsite.com';
-  //                       var registerEmailContent = 'You are receiving this because you (or someone else) have signed up ' +
-  //                       'to the website.\n\n Please click on the following link, or paste this into your browser to complete' +
-  //                        'the process:\n\n' + url + '/confirmEmail/' + user.token + '\n\n Once you have confirmed your account,' +
-  //                        ' you will be able to login.\n';
-  //                       var email = new Email(this.data.email, 'userconfirmation@makeup.com', 'Confirm Account', registerEmailContent, this.res);
-  //                       email.sendTokenEmail();
-  //                       conn.connection.release();
-  //                     });
-  //                   });
-  //                 }
-  //                 );
-  //               });
-  //             } catch (e) {
-  //               console.log(e);
-  //               this.next(e);
-  //             }
-  //           }
-  //         });
-  //       }).catch(err => {
-  //         console.log(err);
-  //         this.next(err);
-  //       });
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //     this.next(e);
-  //   }
-  // }
 
   async login() {
     try {

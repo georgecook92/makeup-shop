@@ -1,4 +1,4 @@
 module.exports = {
   dbUser: 'root',
-  dbPass: ''
+  dbPass: 'root'
 }
