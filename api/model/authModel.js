@@ -3,6 +3,8 @@ var pool = require('../db/connect.js');
 const saltRounds = 10;
 const randomstring = require('randomstring');
 import Email from '../email/email.js';
+var jwt = require('json-web-token');
+var secret = require('../general/jwtSecret.js');
 
 export default class AuthModel {
 
@@ -173,13 +175,18 @@ export default class AuthModel {
       if (result.length > 0) {
         const match = await this.comparePassword(this.data.password, result[0].password);
         if (match) {
+          const token = jwt.sign(result.user_id, secret, {
+          expiresInMinutes: 1440 // expires in 24 hours
+        });
+
           connection.connection.release();
           this.res.status(200).json({
             user_id: result[0].user_id,
             email: result[0].email,
             first_name: result[0].first_name,
             last_name: result[0].last_name,
-            phone: result[0].phone
+            phone: result[0].phone,
+            token: token
           });
         } else {
           connection.connection.release();

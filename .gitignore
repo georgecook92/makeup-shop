@@ -2,6 +2,7 @@
 /dist/bundle.js
 api/db/config.js
 npm-debug.log
+/api/jwtSecret.js
 
 
 # IntelliJ
