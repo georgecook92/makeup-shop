@@ -4,14 +4,6 @@ import {AUTH_USER, AUTH_ADMIN, AUTH_ERROR, UI_MESSAGE} from './types';
 //API ROOT
 const ROOT_URL = 'localhost:8080/api';
 
-export function signinUserNew(email,password) {
-  return function(dispatch) {
-    console.log('NEW FUNC ');
-    //const response = await axios.post(`${ROOT_URL}/auth/login`, { email,password });
-    //console.log(response);
-  }
-}
-
 //sends an error to be displayed via redux
 export function authError(error) {
   return {
