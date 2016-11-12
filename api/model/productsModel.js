@@ -2,19 +2,20 @@ var pool = require('../db/connect.js');
 import * as Queries from '../db/interaction/general.js';
 
 export default class ProductsModel {
-  constructor(data, res, next, sql = '') {
+  constructor(data, res, next, token = '', sql = '') {
     this.sql = sql;
     this.data = data;
     this.res = res;
     this.next = next;
+    this.token = token;
   }
 
   getAllByCat() {
-    Queries.standardGetQuery(this.sql, [this.data.categoryId], this.next, this.res);
+    Queries.standardGetQuery(this.sql, [this.data.categoryId], this.next, this.token, this.res);
   }
 
   getProduct() {
-    Queries.standardGetQuery(this.sql, [this.data.productId], this.next, this.res);
+    Queries.standardGetQuery(this.sql, [this.data.productId], this.next, this.token, this.res);
   }
 
   // ADMIN PANEL STUFF

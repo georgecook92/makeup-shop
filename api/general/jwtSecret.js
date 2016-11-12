@@ -1,1 +1,1 @@
-module.export = "djsj3267SflLH2nSsHdshds932jd";
+module.exports = "djsj3267SflLH2nSsHdshds932jd";

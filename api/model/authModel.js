@@ -3,7 +3,7 @@ var pool = require('../db/connect.js');
 const saltRounds = 10;
 const randomstring = require('randomstring');
 import Email from '../email/email.js';
-var jwt = require('json-web-token');
+var jwt = require('jsonwebtoken');
 var secret = require('../general/jwtSecret.js');
 
 export default class AuthModel {
@@ -111,7 +111,6 @@ export default class AuthModel {
     try {
       var connection = await pool.getConnection();
       var result = await connection.query(this.sql, [this.data.token]);
-      console.log(result.changedRows);
       if (result.changedRows > 0) {
         //  how the mysql library is wrapped - stackoverflow
         connection.connection.release();
@@ -140,7 +139,6 @@ export default class AuthModel {
       user.token = registerToken;
       const connection = await pool.getConnection();
       const emailCheckResult = await connection.query(this.sql, [this.data.email]);
-      console.log(emailCheckResult);
       if (emailCheckResult.length > 0) {
         connection.connection.release();
         throw new Error('Exists');
@@ -148,7 +146,6 @@ export default class AuthModel {
         const hash = await this.hashPassword(this.data.password);
         user.password = hash;
         const insertResult = await connection.query(this.secondSQL, user);
-        console.log(insertResult);
         var url = 'www.testsite.com';
         var registerEmailContent = 'You are receiving this because you (or someone else) have signed up ' +
         'to the website.\n\n Please click on the following link, or paste this into your browser to complete' +
@@ -171,12 +168,12 @@ export default class AuthModel {
     try {
       const connection = await pool.getConnection();
       const result = await connection.query(this.sql, [this.data.email]);
-      console.log('result', result);
+      const user_id = result.user_id;
       if (result.length > 0) {
         const match = await this.comparePassword(this.data.password, result[0].password);
         if (match) {
-          const token = jwt.sign(result.user_id, secret, {
-          expiresInMinutes: 1440 // expires in 24 hours
+          const token = jwt.sign({user_id}, secret, {
+          expiresIn: 1440 // expires in 24 hours
         });
 
           connection.connection.release();
