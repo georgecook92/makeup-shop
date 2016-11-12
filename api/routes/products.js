@@ -4,13 +4,15 @@ import ProductsModel from '../model/productsModel.js';
 
 router.get('/getAllByCat', (req, res, next) => {
   var emailCheckSQL = 'SELECT * FROM _product where _product.category_id = ?';
-  var Model = new ProductsModel(req.query, res, next, emailCheckSQL);
+  var token = req.get('Authorization') || '';
+  var Model = new ProductsModel(req.query, res, next, token, emailCheckSQL);
   Model.getAllByCat();
 });
 
 router.get('/getProduct', (req, res, next) => {
   var emailCheckSQL = 'SELECT * FROM _product where _product.product_id = ?';
-  var Model = new ProductsModel(req.query, res, next, emailCheckSQL);
+  var token = req.get('Authorization');
+  var Model = new ProductsModel(req.query, res, next, token, emailCheckSQL);
   Model.getProduct();
 });
 

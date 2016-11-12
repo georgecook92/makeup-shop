@@ -1,7 +1,11 @@
 var pool = require('../connect.js');
+var jwt = require('jsonwebtoken');
+var secret = require('../../general/jwtSecret.js');
 
-export async function standardUpdateQuery(SQL, data, next, res) {
+export async function standardUpdateQuery(SQL, data, next, token, res) {
+  
   try {
+    var decoded = jwt.verify(token, secret);
     const connection = await pool.getConnection();
     const result = await connection.query(SQL, data);
     if (result.affectedRows > 0) { // exists
@@ -20,8 +24,10 @@ export async function standardUpdateQuery(SQL, data, next, res) {
   }
 }
 
-export async function standardGetQuery(SQL, data, next, res) {
+export async function standardGetQuery(SQL, data, next, token, res) {
+
   try {
+    var decoded = jwt.verify(token, secret);
     const connection = await pool.getConnection();
     const result = await connection.query(SQL, data);
     if (result.length > 0) {

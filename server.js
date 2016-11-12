@@ -47,7 +47,7 @@ app.use('/api/auth', auth);
 app.use('/api/products', products);
 
 app.use(function(err, req, res, next) {
-  if (err.message === 'Incorrect Password') {
+  if (err.message === 'Incorrect Password' || err.message === 'Invalid Token') {
     res.status(401);
   } else if (err.message === 'User Does Not Exist' || err.message === 'ID Not Found') {
     res.status(404);
