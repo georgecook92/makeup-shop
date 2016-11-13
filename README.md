@@ -13,3 +13,12 @@ API TODO:
 Products controller and model - getting products from db by category and individual products.
 
 Cart controller and model - adding/removing product from cart (check if it exists in cart already). Checkout cart. Change quantity in cart.
+
+- check if cart exists - then either create or get all
+- create cart
+- get all from cart
+- add to cart
+- change quantity in cart
+- delete from cart
+- checkout cart
+- delete cart
