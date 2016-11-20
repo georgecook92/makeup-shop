@@ -20,3 +20,13 @@ Cart controller and model - adding/removing product from cart (check if it exist
 - delete from cart
 - checkout cart
 - delete cart
+
+
+ROUTES -
+
+getCart (if none create)
+addToCart
+ChangeQuantityInCart
+deleteFromCart
+createOrder ******** orderModel
+deleteCart

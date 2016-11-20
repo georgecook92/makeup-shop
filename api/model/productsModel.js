@@ -11,11 +11,11 @@ export default class ProductsModel {
   }
 
   getAllByCat() {
-    Queries.standardGetQuery(this.sql, [this.data.categoryId], this.next, this.token, this.res);
+    Queries.standardRequiredLengthGetQuery(this.sql, [this.data.categoryId], this.next, this.token, this.res);
   }
 
   getProduct() {
-    Queries.standardGetQuery(this.sql, [this.data.productId], this.next, this.token, this.res);
+    Queries.standardRequiredLengthGetQuery(this.sql, [this.data.productId], this.next, this.token, this.res);
   }
 
   // ADMIN PANEL STUFF

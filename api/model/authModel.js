@@ -168,7 +168,7 @@ export default class AuthModel {
     try {
       const connection = await pool.getConnection();
       const result = await connection.query(this.sql, [this.data.email]);
-      const user_id = result.user_id;
+      const user_id = result[0].user_id;
       if (result.length > 0) {
         const match = await this.comparePassword(this.data.password, result[0].password);
         if (match) {
