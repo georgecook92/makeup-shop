@@ -1,4 +1,4 @@
-var pool = require('../db/connect.js');
+// var pool = require('../db/connect.js');
 import * as Queries from '../db/interaction/general.js';
 
 export default class CartModel {
@@ -11,14 +11,13 @@ export default class CartModel {
 
   async checkCartExist() {
     const result = await Queries.standardGetQueryToken(this.sql, this.next, this.token);
-    //console.log("RESULT Model", result);
+    // console.log("RESULT Model", result);
     return result;
   }
 
   createCart() {
-    const result = Queries.standardInsertQuery(this.sql,[], this.next, this.token);
+    const result = Queries.standardInsertQuery(this.sql, [], this.next, this.token);
     return result;
   }
-
 
 }

@@ -38,9 +38,5 @@ export default class Email {
         }
       });
     });
-
-
-
-
   }
 }

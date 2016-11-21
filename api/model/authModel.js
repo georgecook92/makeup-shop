@@ -146,16 +146,21 @@ export default class AuthModel {
         const hash = await this.hashPassword(this.data.password);
         user.password = hash;
         const insertResult = await connection.query(this.secondSQL, user);
-        var url = 'www.testsite.com';
-        var registerEmailContent = 'You are receiving this because you (or someone else) have signed up ' +
-        'to the website.\n\n Please click on the following link, or paste this into your browser to complete' +
-         'the process:\n\n' + url + '/confirmEmail/' + user.token + '\n\n Once you have confirmed your account,' +
-         ' you will be able to login.\n';
-        var Email = new Email(this.data.email, 'userconfirmation@makeup.com', 'Confirm Account', registerEmailContent, this.res);
-        const emailResponse = await Email.sendTokenEmail();
-        if (emailResponse) {
-          this.res.json({success: 'Email has been sent'});
+        console.log("insert result", insertResult);
+        if (insertResult.affectedRows) {
+          this.res.json({"success": true});
         }
+
+        // var url = 'www.testsite.com';
+        // var registerEmailContent = 'You are receiving this because you (or someone else) have signed up ' +
+        // 'to the website.\n\n Please click on the following link, or paste this into your browser to complete' +
+        //  'the process:\n\n' + url + '/confirmEmail/' + user.token + '\n\n Once you have confirmed your account,' +
+        //  ' you will be able to login.\n';
+        // var Email = new Email(this.data.email, 'userconfirmation@makeup.com', 'Confirm Account', registerEmailContent, this.res);
+      //   const emailResponse = await Email.sendTokenEmail();
+        // if (emailResponse) {
+        //   this.res.json({success: 'Email has been sent'});
+        // }
         connection.connection.release();
       }
     } catch (e) {
@@ -168,8 +173,9 @@ export default class AuthModel {
     try {
       const connection = await pool.getConnection();
       const result = await connection.query(this.sql, [this.data.email]);
-      const user_id = result[0].user_id;
+
       if (result.length > 0) {
+        const user_id = result[0].user_id;
         const match = await this.comparePassword(this.data.password, result[0].password);
         if (match) {
           const token = jwt.sign({user_id}, secret, {
