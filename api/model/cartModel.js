@@ -11,12 +11,17 @@ export default class CartModel {
 
   async checkCartExist() {
     const result = await Queries.standardGetQueryToken(this.sql, this.next, this.token);
-    // console.log("RESULT Model", result);
+    console.log("RESULT Model", result);
     return result;
   }
 
   createCart() {
     const result = Queries.standardInsertQuery(this.sql, [], this.next, this.token);
+    return result;
+  }
+
+  async getCart() {
+    const result = await Queries.standardGetQueryToken(this.sql, this.next, this.token);
     return result;
   }
 

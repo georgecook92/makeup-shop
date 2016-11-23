@@ -42,7 +42,7 @@ export async function standardGetQueryToken(SQL, next, token) {
     console.log(decoded);
     const connection = await pool.getConnection();
     let result = await connection.query(SQL, decoded.user_id);
-  //  console.log("RESULT getQ", result);
+    console.log("RESULT getQ", result);
     if (result.length > 0) {
       return {
         success: true,
@@ -71,6 +71,18 @@ export async function standardRequiredLengthGetQuery(SQL, data, next, token, res
     } else {
       throw new Error('ID Not Found');
     }
+  } catch (e) {
+    console.log(e);
+    next(e);
+  }
+}
+
+export async function standardGetQuery(SQL, data, next) {
+
+  try {
+    const connection = await pool.getConnection();
+    const result = await connection.query(SQL, data);
+    return result;
   } catch (e) {
     console.log(e);
     next(e);
