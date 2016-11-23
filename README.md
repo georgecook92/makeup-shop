@@ -24,7 +24,7 @@ Cart controller and model - adding/removing product from cart (check if it exist
 
 ROUTES -
 
-getCart (if none create)
+getCart (if none create) *
 addToCart
 ChangeQuantityInCart
 deleteFromCart
