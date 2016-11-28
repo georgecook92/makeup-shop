@@ -42,7 +42,6 @@ export async function standardGetQueryToken(SQL, next, token) {
     console.log(decoded);
     const connection = await pool.getConnection();
     let result = await connection.query(SQL, decoded.user_id);
-    console.log("RESULT getQ", result);
     if (result.length > 0) {
       return {
         success: true,
