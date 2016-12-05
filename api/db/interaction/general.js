@@ -49,7 +49,8 @@ export async function standardGetQueryToken(SQL, next, token) {
       };
     } else {
       return {
-        success: false
+        success: true,
+        data: []
       };
     }
   } catch (e) {

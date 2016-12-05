@@ -44,7 +44,7 @@ export default class CartModel {
       var decoded = jwt.verify(this.token, secret);
       const connection = await pool.getConnection();
       console.log("SQL", this.sql);
-      const result = await connection.query(this.sql, [this.data.cart_id, this.data.product_id]);
+      const result = await connection.query(this.sql, [this.data.quantity, this.data.cart_id, this.data.product_id]);
       return result;
     } catch (e) {
       console.log(e);
@@ -57,6 +57,18 @@ export default class CartModel {
       var decoded = jwt.verify(this.token, secret);
       const connection = await pool.getConnection();
       const result = await connection.query(this.sql, this.data);
+      return result;
+    } catch (e) {
+      console.log(e);
+      this.next(e);
+    }
+  }
+
+  async deleteFromCart() {
+    try {
+      var decoded = jwt.verify(this.token, secret);
+      const connection = await pool.getConnection();
+      const result = await connection.query(this.sql, [this.data.cart_id, this.data.product_id]);
       return result;
     } catch (e) {
       console.log(e);

@@ -179,7 +179,7 @@ export default class AuthModel {
         const match = await this.comparePassword(this.data.password, result[0].password);
         if (match) {
           const token = jwt.sign({user_id}, secret, {
-          expiresIn: 1440 // expires in 24 hours
+          expiresIn: '6h' 
         });
 
           connection.connection.release();
