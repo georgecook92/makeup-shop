@@ -12,7 +12,7 @@ const AuthState = Record({
 
 export default handleActions({
 
-  [initialise] : AuthState(),
+  [initialise] : () => AuthState(),
 
   [setLoadingTrue] : (state) => state.set('loading', true),
 

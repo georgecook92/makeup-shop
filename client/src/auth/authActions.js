@@ -32,3 +32,27 @@ export const loginRequest = (data) => {
     });
   };
 };
+
+export const registerRequest = (data) => {
+  return function(dispatch) {
+    dispatch(setLoadingTrue());
+    const request = axios.post(`/api/auth/register`, {
+      email: data.email,
+      password: data.password,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      phone: data.phone
+    });
+    request.then( () => {
+      const loginData = {
+        email: data.email,
+        password: data.password
+      };
+      dispatch(loginRequest(loginData));
+
+    } ).catch((err) => {
+      // dispatch(loginFailure(err.response.data));
+      console.log("ERROR", err);
+    });
+  };
+};

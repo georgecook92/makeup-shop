@@ -35,7 +35,6 @@ class LoginComponent extends Component {
 
       // if no errors - submit the form
       if ( !error ) {
-        console.log("SUBMIT");
         this.setState({submitting: true});
         const data = {
           email,
@@ -73,11 +72,12 @@ class LoginComponent extends Component {
   render() {
     return (
       <div>
+        <h1>Login</h1>
         <form onSubmit={this._handleSubmit.bind(this)}>
           <div>
             <input
             placeholder="email"
-            type="text"
+            type="email"
             value={this.state.formValues.email}
             onChange={this.handleChange.bind(this, "email")}
             onBlur={this.handleBlur.bind(this, "email")}
@@ -98,7 +98,7 @@ class LoginComponent extends Component {
           <button disabled={this.props.loading}>Submit</button>
         </form>
       </div>
-    )
+    );
   }
 }
 
