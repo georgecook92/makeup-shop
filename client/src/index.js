@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import RootComponent from "./RootComponent.js";
 import Login from "./auth/LoginComponent.js";
 import Register from "./auth/RegisterComponent.js";
 
@@ -13,7 +14,7 @@ const store = configureStore();
 ReactDOM.render(
   <Provider store={store} >
     <Router history={hashHistory}>
-        <Route path="/">
+        <Route path="/" component={RootComponent}>
           <IndexRoute component={Login} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
