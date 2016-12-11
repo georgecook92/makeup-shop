@@ -1,14 +1,38 @@
 import { createAction } from 'redux-actions';
+import {hashHistory} from 'react-router';
 import axios from 'axios';
 import {Map} from "immutable";
 
 // const API_ROOT = "http://localhost:8080/api";
 
-export const setLoadingTrue = createAction("Set loading true");
-export const setLoadingFalse = createAction("Set loading false");
-export const loginSuccess = createAction("Login success");
+export const setLoadingTrue = createAction("Set auth loading true");
+export const loginSuccess = createAction("Login success", (payload) => {
+  hashHistory.push('/products/all');
+  return payload;
+});
 export const loginFailure = createAction("Login failure");
 export const initialise = createAction("Initialise");
+
+export const getUserFromTokenSuccess = createAction("Get user from token success");
+export const getUserFromTokenFail = createAction("Get user from token fail");
+
+export const getUserFromToken = (token) => {
+  return function(dispatch) {
+    dispatch(setLoadingTrue());
+    const request = axios({
+      method: 'get',
+      url: '/api/auth/getUserFromToken',
+      headers: {
+        'Authorization': token
+      }
+    });
+    request.then((response) => {
+      dispatch(getUserFromTokenSuccess(response.data));
+    }).catch((err) => {
+      dispatch(getUserFromTokenFail(err.response.data));
+    });
+  };
+};
 
 export const loginRequest = (data) => {
   return function(dispatch) {

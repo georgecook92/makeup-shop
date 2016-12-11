@@ -8,7 +8,8 @@ var secret = require('../general/jwtSecret.js');
 
 export default class AuthModel {
 
-  constructor(data, res, next, sql = '', secondSQL = '') {
+  constructor(token, data, res, next, sql = '', secondSQL = '') {
+    this.token = token;
     this.sql = sql;
     this.data = data;
     this.res = res;
@@ -169,6 +170,32 @@ export default class AuthModel {
     }
   }
 
+  async getUserFromToken() {
+    try {
+      const decoded = jwt.verify(this.token, secret);
+      if (decoded.user_id) {
+        const connection = await pool.getConnection();
+        const result = await connection.query(this.sql, [decoded.user_id]);
+        connection.connection.release();
+        this.res.status(200).json({
+          user_id: result[0].user_id,
+          email: result[0].email,
+          first_name: result[0].first_name,
+          last_name: result[0].last_name,
+          phone: result[0].phone
+        });
+      } else {
+        connection.connection.release();
+        this.res.status(401).json({"error": "Invalid Token"});
+      }
+
+
+    } catch(e) {
+      console.log(e);
+      this.next(e);
+    }
+  }
+
   async login() {
     try {
       const connection = await pool.getConnection();
@@ -179,7 +206,7 @@ export default class AuthModel {
         const match = await this.comparePassword(this.data.password, result[0].password);
         if (match) {
           const token = jwt.sign({user_id}, secret, {
-          expiresIn: '6h' 
+          expiresIn: '6h'
         });
 
           connection.connection.release();

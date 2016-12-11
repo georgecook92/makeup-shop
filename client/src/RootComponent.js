@@ -1,6 +1,14 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {fetchAllProducts} from './products/productActions';
 
 class RootComponent extends Component {
+
+  componentDidMount() {
+    console.log("MOUNT");
+    this.props.fetchAllProducts();
+  }
+
   render() {
     return (
       <div>
@@ -11,7 +19,14 @@ class RootComponent extends Component {
 }
 
 RootComponent.propTypes = {
-  children: React.PropTypes.node
+  children: React.PropTypes.node,
+  fetchAllProducts: React.PropTypes.func.isRequired
 }
 
-export default RootComponent;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchAllProducts: () => dispatch(fetchAllProducts())
+  };
+};
+
+export default connect(null, mapDispatchToProps)(RootComponent);

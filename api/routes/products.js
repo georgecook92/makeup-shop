@@ -9,6 +9,14 @@ router.get('/getAllByCat', (req, res, next) => {
   Model.getAllByCat();
 });
 
+router.get('/getAll', async (req, res, next) => {
+  var emailCheckSQL = 'SELECT * FROM _product';
+  var token = req.get('Authorization') || "";
+  var Model = new ProductsModel(req.query, res, next, token, emailCheckSQL);
+  const result = await Model.getAll();
+  res.json(result);
+});
+
 router.get('/getProduct', (req, res, next) => {
   var emailCheckSQL = 'SELECT * FROM _product where _product.product_id = ?';
   var token = req.get('Authorization') || "";

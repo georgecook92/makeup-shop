@@ -15,11 +15,6 @@ module.exports = {
         "react"
     ],
     "rules": {
-        // "indent": [
-        //     "error",
-        //     2,
-        //     {"SwitchCase": 1}
-        // ],
         "linebreak-style": [
             "error",
             "unix"
@@ -27,6 +22,7 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ]
+        ],
+      //  "async/missing-await-in-async-fn": 1,
     }
 };

@@ -1,5 +1,7 @@
 var pool = require('../db/connect.js');
 import * as Queries from '../db/interaction/general.js';
+var secret = require('../general/jwtSecret.js');
+var jwt = require('jsonwebtoken');
 
 export default class ProductsModel {
   constructor(data, res, next, token = '', sql = '') {
@@ -8,6 +10,17 @@ export default class ProductsModel {
     this.res = res;
     this.next = next;
     this.token = token;
+  }
+
+  async getAll() {
+    try {
+      const connection = await pool.getConnection();
+      const result = await connection.query(this.sql);
+      return result;
+    } catch (e) {
+      console.log(e);
+      this.next(e);
+    }
   }
 
   getAllByCat() {
