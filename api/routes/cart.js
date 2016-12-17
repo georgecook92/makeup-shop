@@ -5,24 +5,21 @@ import CartModel from '../model/cartModel.js';
 router.get('/getCart', async (req, res, next) => {
   try {
     const emailCheckSQL = 'SELECT * FROM _cart where user_id = ?';
-    const token = req.get('Authorization') || "";
+    const token = req.get('Authorization') || "test";
     const Model = new CartModel(req.body, next, token, emailCheckSQL);
     const cartExist = await Model.checkCartExist();
-    console.log("cart exist", cartExist);
 
-    if (cartExist.success) {
-      console.log("SUCCESS");
-      const getCartSQL = 'SELECT * FROM _cart inner join _cart_product on _cart_product.cart_id = _cart.cart_id where user_id = ?';
+    if (cartExist.length !== 0) {
+      const getCartSQL = 'SELECT _product.product_id, _product.product_name, _product.price, _cart_product.quantity, _product.discount  FROM _cart inner join _cart_product on _cart_product.cart_id = _cart.cart_id inner join _product on _product.product_id = _cart_product.product_id where user_id = ?';
       var cartModel = new CartModel(req.body, next, token, getCartSQL);
       var result = await cartModel.getCart();
-      console.log("RESULT", result);
       // will return a success value and data if success == true
-      res.json(result);
+      res.json({data: result, cartId: cartExist[0].cart_id});
     } else {
       var createCartSQL = 'insert into _cart SET user_id=?';
       var CreateCartModel = new CartModel(req.body, next, token, createCartSQL);
       const createdCart = await CreateCartModel.createCart();
-      res.json({"success": false});
+      res.json([]);
     }
   } catch(e) {
     console.log(e);
@@ -51,7 +48,13 @@ router.post("/addToCart", async (req, res, next) => {
       result = await AddCartModel.addToCart();
     }
 
-    res.json(result);
+    const cartCheckSQL = 'SELECT * FROM _cart where user_id = ?';
+    const Model = new CartModel(req.body, next, token, cartCheckSQL);
+    const cartExist = await Model.checkCartExist();
+    const getCartSQL = 'SELECT _product.product_id, _product.product_name, _product.price, _cart_product.quantity, _product.discount  FROM _cart inner join _cart_product on _cart_product.cart_id = _cart.cart_id inner join _product on _product.product_id = _cart_product.product_id where user_id = ?';
+    var cartModel = new CartModel(req.body, next, token, getCartSQL);
+    const data = await cartModel.getCart();
+    res.json({data: data, cartId: cartExist[0].cart_id});
   } catch(e) {
     console.log(e);
   }

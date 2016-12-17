@@ -12,9 +12,16 @@ export default class CartModel {
   };
 
   async checkCartExist() {
-    const result = await Queries.standardGetQueryToken(this.sql, this.next, this.token);
-    console.log("RESULT Model", result);
-    return result;
+    try {
+      var decoded = jwt.verify(this.token, secret);
+      const connection = await pool.getConnection();
+      const result = await connection.query(this.sql, [decoded.user_id]);
+      connection.connection.release();
+      console.log("cart", result);
+      return result;
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   async createCart() {
@@ -23,8 +30,15 @@ export default class CartModel {
   }
 
   async getCart() {
-    const result = await Queries.standardGetQueryToken(this.sql, this.next, this.token);
-    return result;
+    try {
+      var decoded = jwt.verify(this.token, secret);
+      const connection = await pool.getConnection();
+      const result = await connection.query(this.sql, [decoded.user_id]);
+      connection.connection.release();
+      return result;
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   async checkCartProduct() {

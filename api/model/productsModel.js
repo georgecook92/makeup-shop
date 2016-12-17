@@ -16,6 +16,7 @@ export default class ProductsModel {
     try {
       const connection = await pool.getConnection();
       const result = await connection.query(this.sql);
+      connection.connection.release();
       return result;
     } catch (e) {
       console.log(e);

@@ -1,7 +1,23 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {addToCart} from '../cart/cartActions';
 
 class IndividualProduct extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      quantityToAdd: ''
+    };
+  }
+
+  handleChange(e) {
+    let val = e.target.value;
+    this.setState({
+      quantityToAdd: parseInt(val, 10)
+    });
+  }
+
   render() {
     if (this.props.loading || !this.props.products) {
       return null;
@@ -15,6 +31,15 @@ class IndividualProduct extends Component {
           <h3>{product.product_description}</h3>
           <h4>£{product.price}</h4>
           <h4>Quantity Left {product.quantity}</h4>
+          <form>
+            <label>Quantity to add</label>
+            <input type="number"
+                  value={this.state.quantityToAdd}
+                  onChange={this.handleChange.bind(this)}
+                  />
+            <button>Add to cart</button>
+          </form>
+
         </div>
       );
     } else {
@@ -39,4 +64,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, null)(IndividualProduct);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToCart: () => dispatch(addToCart())
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(IndividualProduct);

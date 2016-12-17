@@ -42,7 +42,6 @@ export async function standardUpdateQuery(SQL, data, next, token, res) {
 export async function standardGetQueryToken(SQL, next, token) {
   try {
     var decoded = jwt.verify(token, secret);
-    console.log(decoded);
     const connection = await pool.getConnection();
     let result = await connection.query(SQL, decoded.user_id);
     if (result.length > 0) {

@@ -16,10 +16,10 @@ class SplashComponent extends Component {
   }
 
   render() {
-    const {loading} = this.props;
-    if (loading) {
-      return null;
-    }
+    // const {loading} = this.props;
+    // if (loading) {
+    //   return null;
+    // }
     return (
       <div>
         {this._renderProducts()}

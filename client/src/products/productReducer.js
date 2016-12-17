@@ -1,6 +1,6 @@
 import {Record, List} from "immutable";
 import { handleActions } from 'redux-actions';
-import {initialise, setLoadingTrue, fetchAllSuccess, fetchAllFail} from './productActions';
+import {initialiseProducts, setLoadingTrue, fetchAllSuccess, fetchAllFail} from './productActions';
 
 // immutable
 const ProductState = Record({
@@ -11,7 +11,7 @@ const ProductState = Record({
 
 export default handleActions({
 
-  [initialise] : () => ProductState(),
+  [initialiseProducts] : () => ProductState(),
 
   [setLoadingTrue] : (state) => state.set('loading', true),
 

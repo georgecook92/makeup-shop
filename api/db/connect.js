@@ -5,8 +5,7 @@ var pool  = mysql.createPool({
   host            : 'localhost',
   user            : config.dbUser,
   password        : config.dbPass,
-  database        : 'makeup',
-  connectionLimit: 10
+  database        : 'makeup'
 });
 
 module.exports = pool;

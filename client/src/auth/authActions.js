@@ -14,7 +14,11 @@ export const loginFailure = createAction("Login failure");
 export const initialise = createAction("Initialise");
 
 export const getUserFromTokenSuccess = createAction("Get user from token success");
-export const getUserFromTokenFail = createAction("Get user from token fail");
+export const getUserFromTokenFail = createAction("Get user from token fail", (payload) => {
+  hashHistory.push('/login');
+  // potentially set error
+  return payload;
+});
 
 export const getUserFromToken = (token) => {
   return function(dispatch) {
@@ -29,6 +33,7 @@ export const getUserFromToken = (token) => {
     request.then((response) => {
       dispatch(getUserFromTokenSuccess(response.data));
     }).catch((err) => {
+      console.log('FAIL');
       dispatch(getUserFromTokenFail(err.response.data));
     });
   };
