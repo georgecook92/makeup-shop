@@ -8,9 +8,9 @@ export const fetchCartFail = createAction('Fetch cart fail');
 
 export const fetchCart = () => {
   return function(dispatch) {
-    dispatch(fetchingCart());
     const token = localStorage.getItem('token');
     if (token) {
+      dispatch(fetchingCart());
       const request = axios({
         method: 'get',
         url: '/api/cart/getCart',
@@ -36,9 +36,9 @@ export const addToCartFail = createAction('Add product to cart fail');
 
 export const addToCart = (data) => {
   return function(dispatch) {
-      dispatch(addingToCart());
       const token = localStorage.getItem('token');
-      if (token) {
+      if (token) { // store in db
+        dispatch(addingToCart());
         const request = axios({
           method: 'post',
           url: '/api/cart/addToCart',
@@ -50,13 +50,20 @@ export const addToCart = (data) => {
             cart_id: data.cartId,
             quantity: data.quantity
           }
-        })
-        .then((response) => {
-          dispatch(addToCartSuccess());
+        });
+        request.then((response) => {
+          dispatch(addToCartSuccess(List(response.data.data)));
         })
         .catch((err) => {
           dispatch(addToCartFail(err));
         });
+      } else {
+        // localStorage
+        let cart = localStorage.getItem('cart')
+        if (cart) {
+          let jsonCart = JSON.parse(cart);
+          jsonCart.push()
+        }
       }
   };
 };

@@ -19,7 +19,7 @@ class RootComponent extends Component {
 
     return (
       <div>
-        <Cart />  
+        <Cart />
       {this.props.children}
       </div>
     );

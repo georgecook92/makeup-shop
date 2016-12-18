@@ -35,11 +35,14 @@ router.post("/addToCart", async (req, res, next) => {
     const token = req.get('Authorization') || "";
     const CheckCartModel = new CartModel(req.body, next, token, checkSQL);
     const check = await CheckCartModel.checkCartProduct();
-    var result = null;
+    console.log('check', check);
+    let result;
 
     if (check.length > 0) {
+      // total quantity
+      const quantity = check[0].quantity + req.body.quantity;
       // update cart
-      const addSQL = "UPDATE _cart_product SET quantity = ? where cart_id = ? AND product_id = ?";
+      const addSQL = "UPDATE _cart_product SET quantity = " + quantity + " where cart_id = ? AND product_id = ?";
       var UpdateCartModel = new CartModel(req.body, next, token, addSQL);
       result = await UpdateCartModel.updateCartProduct();
     } else {

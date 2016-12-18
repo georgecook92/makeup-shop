@@ -59,7 +59,7 @@ export default class CartModel {
       var decoded = jwt.verify(this.token, secret);
       const connection = await pool.getConnection();
       console.log("SQL", this.sql);
-      const result = await connection.query(this.sql, [this.data.quantity, this.data.cart_id, this.data.product_id]);
+      const result = await connection.query(this.sql, [this.data.cart_id, this.data.product_id]);
       connection.connection.release();
       return result;
     } catch (e) {

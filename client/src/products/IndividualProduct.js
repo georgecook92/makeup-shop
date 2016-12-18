@@ -7,7 +7,8 @@ class IndividualProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantityToAdd: ''
+      quantityToAdd: 1,
+      error: ''
     };
   }
 
@@ -18,10 +19,35 @@ class IndividualProduct extends Component {
     });
   }
 
-  render() {
-    if (this.props.loading || !this.props.products) {
-      return null;
+  _handleFormSubmit(e) {
+    e.preventDefault();
+    let error = false;
+
+    if (this.props.user.size === 0) {
+      this.setState({error: 'Must be signed in to add to cart'});
+      return;
     }
+
+    if (!this.state.quantityToAdd) {
+      this.setState({error: 'Please select a quantity to add'});
+      error = true;
+    }
+
+    if (!error) {
+      const data = {
+        cartId: this.props.cartId,
+        productId: this.props.product.product_id,
+        quantity: this.state.quantityToAdd
+      };
+      this.props.addToCart(data);
+    }
+  }
+
+  render() {
+    if (this.props.loading || !this.props.products || (localStorage.getItem('token') && !this.props.cartId) ) {
+      return <div>Loading</div>;
+    }
+
     const {product} = this.props;
 
     if (product) {
@@ -31,12 +57,13 @@ class IndividualProduct extends Component {
           <h3>{product.product_description}</h3>
           <h4>£{product.price}</h4>
           <h4>Quantity Left {product.quantity}</h4>
-          <form>
+          <form onSubmit={this._handleFormSubmit.bind(this)} >
             <label>Quantity to add</label>
             <input type="number"
                   value={this.state.quantityToAdd}
                   onChange={this.handleChange.bind(this)}
                   />
+                {this.state.error && <div>{this.state.error}</div>}
             <button>Add to cart</button>
           </form>
 
@@ -53,20 +80,25 @@ IndividualProduct.propTypes = {
   params: React.PropTypes.object,
   loading: React.PropTypes.bool.isRequired,
   product: React.PropTypes.object,
-  products: React.PropTypes.object
+  products: React.PropTypes.object,
+  cartId: React.PropTypes.number,
+  addToCart: React.PropTypes.func.isRequired,
+  user: React.PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    user: state.auth.user,
     loading: state.products.loading,
     product: state.products.products.find( p => (parseInt(p.product_id, 10) === parseInt(ownProps.params.productId, 10)) ),
-    products: state.products.products
+    products: state.products.products,
+    cartId: state.cartState.id
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addToCart: () => dispatch(addToCart())
+    addToCart: (data) => dispatch(addToCart(data))
   };
 };
 

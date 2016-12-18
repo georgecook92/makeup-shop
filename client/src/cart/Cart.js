@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 
 class Cart extends React.Component {
   render() {
-    console.log('size', this.props.numberInCart.size);
     return <div>Cart {this.props.numberInCart.size}</div>;
   }
 }
