@@ -9,7 +9,8 @@ class RootComponent extends Component {
   componentDidMount() {
     this.props.fetchAllProducts();
     this.props.fetchCart();
-  }
+    }
+
 
   render() {
 
@@ -31,20 +32,22 @@ RootComponent.propTypes = {
   fetchAllProducts: React.PropTypes.func.isRequired,
   productsLoading: React.PropTypes.bool.isRequired,
   fetchCart: React.PropTypes.func.isRequired,
-  cartLoading: React.PropTypes.bool.isRequired
+  cartLoading: React.PropTypes.bool.isRequired,
+  user: React.PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
     productsLoading: state.products.loading,
-    cartLoading: state.cartState.loading
+    cartLoading: state.cartState.loading,
+    user: state.auth.user
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAllProducts: () => dispatch(fetchAllProducts()),
-    fetchCart: () => dispatch(fetchCart())
+    fetchCart: (cart) => dispatch(fetchCart(cart))
   };
 };
 

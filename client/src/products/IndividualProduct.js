@@ -37,7 +37,9 @@ class IndividualProduct extends Component {
       const data = {
         cartId: this.props.cartId,
         productId: this.props.product.product_id,
-        quantity: this.state.quantityToAdd
+        quantity: this.state.quantityToAdd,
+        productName: this.props.product.product_name,
+        price: this.props.product.price
       };
       this.props.addToCart(data);
     }

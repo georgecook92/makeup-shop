@@ -140,10 +140,11 @@ export default class AuthModel {
       user.token = registerToken;
       const connection = await pool.getConnection();
       const emailCheckResult = await connection.query(this.sql, [this.data.email]);
-      if (emailCheckResult.length > 0) {
+      if (emailCheckResult.length > 0) {ß
         connection.connection.release();
         throw new Error('Exists');
       } else {
+        console.log('INSERT');
         const hash = await this.hashPassword(this.data.password);
         user.password = hash;
         const insertResult = await connection.query(this.secondSQL, user);

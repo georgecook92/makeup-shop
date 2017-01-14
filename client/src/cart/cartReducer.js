@@ -16,7 +16,7 @@ export default handleActions({
   [fetchingCart] : state => state.set('loading', true),
 
   [fetchCartSuccess] : (state, action) => state.set('loading', false).set('cart', action.payload.data)
-                                            .set('id', action.payload.id),
+                                            .set('id', action.payload.id !== null ? action.payload.id : null),
 
   [fetchCartFail] : (state, action) => state.set('loading', false).set('error', action.payload),
 
