@@ -1,6 +1,6 @@
 var pool = require('../connect.js');
 var jwt = require('jsonwebtoken');
-var secret = require('../../general/jwtSecret.js');
+var secret = require('../../jwtSecret.js');
 
 export async function standardInsertQuery(SQL, data, next, token) {
   try {

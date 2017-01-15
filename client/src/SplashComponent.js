@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
+import Cart from './cart/Cart';
+
 class SplashComponent extends Component {
 
   _renderProducts() {
@@ -16,15 +18,12 @@ class SplashComponent extends Component {
   }
 
   render() {
-    // const {loading} = this.props;
-    // if (loading) {
-    //   return null;
-    // }
     return (
       <div>
+        <Cart />
         {this._renderProducts()}
       </div>
-    )
+    );
   }
 }
 

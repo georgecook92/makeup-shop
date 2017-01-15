@@ -4,7 +4,7 @@ const saltRounds = 10;
 const randomstring = require('randomstring');
 import Email from '../email/email.js';
 var jwt = require('jsonwebtoken');
-var secret = require('../general/jwtSecret.js');
+var secret = require('../jwtSecret.js');
 
 export default class AuthModel {
 

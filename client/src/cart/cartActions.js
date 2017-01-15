@@ -1,6 +1,7 @@
 import { createAction } from 'redux-actions';
-import {List} from 'immutable';
+import { List } from 'immutable';
 import axios from 'axios';
+import { hashHistory } from 'react-router';
 
 export const fetchingCart = createAction('Fetching cart');
 export const fetchCartSuccess = createAction('Fetch cart success');
@@ -50,9 +51,38 @@ export const addToCart = (data) => {
       });
       request.then((response) => {
         dispatch(addToCartSuccess(List(response.data.data)));
+        hashHistory.push('/cart');
       })
       .catch((err) => {
         dispatch(addToCartFail(err.response.data));
       });
   };
+};
+
+export const deletingFromCart = createAction('Deleting from cart');
+export const deleteFromCartSuccess = createAction('Deleting from cart success');
+export const deleteFromCartFail = createAction('Deleting from cart fail');
+
+export const deleteFromCart = (cartId, productId) => {
+    return function(dispatch) {
+        dispatch(deletingFromCart());
+        const token = localStorage.getItem('token');
+        const request = axios({
+          method: 'delete',
+          url: '/api/cart/deleteFromCart',
+          headers: {
+            'Authorization': token
+          },
+          data: {
+            product_id: productId,
+            cart_id: cartId
+          }
+        });
+        request.then(() => {
+          dispatch(deleteFromCartSuccess(productId));
+        })
+        .catch((err) => {
+          dispatch(deleteFromCartFail(err.response.data));
+        });
+    };
 };

@@ -1,7 +1,8 @@
 import {Record, List} from "immutable";
 import { handleActions } from 'redux-actions';
 import {fetchingCart, fetchCartSuccess, fetchCartFail,
-        addingToCart, addToCartSuccess, addToCartFail} from './cartActions';
+        addingToCart, addToCartSuccess, addToCartFail,
+        deletingFromCart, deleteFromCartSuccess, deleteFromCartFail} from './cartActions';
 
 // immutable
 const CartState = Record({
@@ -24,6 +25,17 @@ export default handleActions({
 
   [addToCartSuccess] : (state, action) => state.set('loading', false).set('cart', action.payload),
 
-  [addToCartFail] : (state, action) => state.set('loading', false).set('error', action.payload)
+  [addToCartFail] : (state, action) => state.set('loading', false).set('error', action.payload),
+
+  [deletingFromCart]: state => state.set('loading', true),
+
+  [deleteFromCartFail]: (state, action) => state
+    .set('error', action.payload)
+    .set('loading', false),
+
+  [deleteFromCartSuccess] : (state, action) => {
+    const newCart = state.cart.filter( (c) => (c.product_id !== action.payload) );
+    return state.set('cart', newCart).set('loading', false);
+  }
 
 }, CartState());

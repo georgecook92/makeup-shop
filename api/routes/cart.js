@@ -40,9 +40,9 @@ router.post("/addToCart", async (req, res, next) => {
 
     if (check.length > 0) {
       // total quantity
-      const quantity = check[0].quantity + req.body.quantity;
+      //const quantity = check[0].quantity + parseInt(req.body.quantity);
       // update cart
-      const addSQL = "UPDATE _cart_product SET quantity = " + quantity + " where cart_id = ? AND product_id = ?";
+      const addSQL = "UPDATE _cart_product SET quantity = " + parseInt(req.body.quantity) + " where cart_id = ? AND product_id = ?";
       var UpdateCartModel = new CartModel(req.body, next, token, addSQL);
       result = await UpdateCartModel.updateCartProduct();
     } else {
@@ -63,7 +63,7 @@ router.post("/addToCart", async (req, res, next) => {
   }
 });
 
-router.post("/deleteFromCart", async (req,res,next) => {
+router.delete("/deleteFromCart", async (req,res,next) => {
   try {
     const SQL = "DELETE FROM _cart_product where cart_id = ? AND product_id = ?";
     const token = req.get('Authorization') || "";

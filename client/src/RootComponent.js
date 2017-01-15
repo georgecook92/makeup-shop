@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import Cart from './cart/Cart';
 import {fetchAllProducts} from './products/productActions';
 import {fetchCart} from './cart/cartActions';
 
@@ -20,7 +19,7 @@ class RootComponent extends Component {
 
     return (
       <div>
-        <Cart />
+
       {this.props.children}
       </div>
     );

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {addToCart} from '../cart/cartActions';
+import Cart from '../cart/Cart';
 
 class IndividualProduct extends Component {
 
@@ -33,6 +34,11 @@ class IndividualProduct extends Component {
       error = true;
     }
 
+    if (this.state.quantityToAdd < 0) {
+      this.setState({error: 'Please select a positive number'});
+      error = true;
+    }
+
     if (!error) {
       const data = {
         cartId: this.props.cartId,
@@ -45,6 +51,22 @@ class IndividualProduct extends Component {
     }
   }
 
+  renderAddToCart() {
+      // check if it is in the basket already
+      console.log('product', this.props.product.product_id);
+      return (
+          <form onSubmit={this._handleFormSubmit.bind(this)} >
+            <label>Quantity to add</label>
+            <input type="number"
+                  value={this.state.quantityToAdd}
+                  onChange={this.handleChange.bind(this)}
+                  />
+                {this.state.error && <div>{this.state.error}</div>}
+            <button>Add to cart</button>
+          </form>
+      );
+  }
+
   render() {
     if (this.props.loading || !this.props.products || (localStorage.getItem('token') && !this.props.cartId) ) {
       return <div>Loading</div>;
@@ -55,19 +77,12 @@ class IndividualProduct extends Component {
     if (product) {
       return (
         <div>
+        <Cart />
           <h1>{product.product_name}</h1>
           <h3>{product.product_description}</h3>
           <h4>£{product.price}</h4>
           <h4>Quantity Left {product.quantity}</h4>
-          <form onSubmit={this._handleFormSubmit.bind(this)} >
-            <label>Quantity to add</label>
-            <input type="number"
-                  value={this.state.quantityToAdd}
-                  onChange={this.handleChange.bind(this)}
-                  />
-                {this.state.error && <div>{this.state.error}</div>}
-            <button>Add to cart</button>
-          </form>
+          {this.renderAddToCart()}
 
         </div>
       );
@@ -94,7 +109,8 @@ const mapStateToProps = (state, ownProps) => {
     loading: state.products.loading,
     product: state.products.products.find( p => (parseInt(p.product_id, 10) === parseInt(ownProps.params.productId, 10)) ),
     products: state.products.products,
-    cartId: state.cartState.id
+    cartId: state.cartState.id,
+    cart: state.cartState.cart
   };
 };
 

@@ -6,6 +6,7 @@ import Login from "./auth/LoginComponent";
 import Register from "./auth/RegisterComponent";
 import SplashComponent from "./SplashComponent";
 import IndividualProduct from "./products/IndividualProduct";
+import CartView from './cart/CartView';
 
 import { Provider } from "react-redux";
 import { Router, Route, hashHistory, IndexRoute } from "react-router";
@@ -30,6 +31,7 @@ ReactDOM.render(
           <Route path="all" component={SplashComponent}></Route>
           <Route path=":productId" component={IndividualProduct}></Route>
         </Route>
+        <Route path="cart" component={CartView} />
 
       </Route>
 

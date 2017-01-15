@@ -1,6 +1,6 @@
 var pool = require('../db/connect.js');
 import * as Queries from '../db/interaction/general.js';
-var secret = require('../general/jwtSecret.js');
+var secret = require('../jwtSecret.js');
 var jwt = require('jsonwebtoken');
 
 export default class CartModel {
