@@ -10,6 +10,7 @@ require('babel-polyfill');
 const auth = require('./dist/API/routes/auth');
 const products = require('./dist/API/routes/products');
 const cart = require('./dist/API/routes/cart.js');
+const payment = require('./dist/API/routes/payment.js');
 
 
 
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use('/api/auth', auth);
 app.use('/api/products', products);
 app.use('/api/cart', cart);
+app.use('/api/payment', payment);
 
 app.use(function(err, req, res, next) {
   if (err.message === 'Incorrect Password' || err.message === 'Invalid Token') {
