@@ -7,12 +7,12 @@ var jwt = require('jsonwebtoken');
 router.post('/createPayment', (req, res) => {
 
     const authToken = req.get('Authorization') || "";
-    var decoded = jwt.verify(this.token, secret);
+    var decoded = jwt.verify(authToken, secret);
 
     var stripe = require("stripe")(config.stripeSecret);
     const currency = "gbp";
     const { amount, description } = req.body;
-    let stripeToken = null;
+
     stripe.tokens.create({
         card: {
           "number": '4000058260000005',
@@ -22,26 +22,18 @@ router.post('/createPayment', (req, res) => {
         }
     }).then( (token) => {
       console.log('created token', token);
-      stripeToken = token;
-    } ).catch( (error) => {
-      console.log('error from creating token', error);
-    } )
-
-    const charge = stripe.charges.create({
-        amount,
-        currency,
-        description,
-        source: stripeToken
-    });
-
-    charge.then( (response) => {
+      return stripe.charges.create({
+          amount,
+          currency,
+          description,
+          source: token.id
+      })
+    } ).then( (response) => {
       console.log('response from stripe', response);
       res.json(response);
     } ).catch( (error) => {
-      console.log('error from stripe', error);
-      res.json(error);
-    } );
-
+      console.log('error', error);
+    } )
 });
 
 module.exports = router;
