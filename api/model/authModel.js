@@ -140,7 +140,7 @@ export default class AuthModel {
       user.token = registerToken;
       const connection = await pool.getConnection();
       const emailCheckResult = await connection.query(this.sql, [this.data.email]);
-      if (emailCheckResult.length > 0) {ß
+      if (emailCheckResult.length > 0) {
         connection.connection.release();
         throw new Error('Exists');
       } else {
