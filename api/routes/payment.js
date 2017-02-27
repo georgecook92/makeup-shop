@@ -47,7 +47,6 @@ router.post('/createPayment', async (req, res, next) => {
             source: token.id
         })
       } ).then( async (response) => {
-        //console.log('response from stripe', response);
 
         const orderModel = new OrderModel({payment_id: response.id, total_price: totalPrice}, next, authToken, insertOrderSQL, cartResult, insertProductSQL);
         const orderResult = await orderModel.addOrder();
